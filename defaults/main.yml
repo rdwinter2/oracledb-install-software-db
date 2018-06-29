@@ -1,14 +1,82 @@
 ---
 
+# Where to get the Oracle COTS install files
+binaries_url: http://binaries
+
+oracle_user: oracle
+oracle_inventory_group: oinstall
+oracle_version: 12.2.0
+oracle_base: /u01/app/oracle
+oracle_home: "{{ oracle_base }}/product/{{ oracle_version }}/dbhome_1"
+oracle_inventory_location: /u01/app/oraInventory
+apply_psu: true
+tmp_dest: /u01/tmp
+
+oracle_directories:
+  - { dir: "/u01", owner: "{{ oracle_user }}", group: "{{ oracle_inventory_group }}", mode: "u=rwx,g=rwx,o=" }
+  - { dir: "/u01/tmp", owner: "{{ oracle_user }}", group: "{{ oracle_inventory_group }}", mode: "u=rwx,g=rwx,o=" }
+  - { dir: "/u01/software", owner: "{{ oracle_user }}", group: "{{ oracle_inventory_group }}", mode: "u=rwx,g=rwx,o=" }
+
+oracle_software:
+  - name: "oracle_database"
+    file_name: linuxx64_12201_database.zip
+    description: Oracle 12.2 database installation software
+    url: http://www.oracle.com/technetwork/database/enterprise-edition/downloads/oracle12c-linux-12201-3608234.html
+    unzip_dest: /u01/software
+    creates: /u01/software/database
+    bytes: 3453696911
+    checksum: 4170261901
+    sha256: 96ed97d21f15c1ac0cce3749da6c3dac7059bb60672d76b008103fc754d22dde
+
+opatch_software:
+  - name: "opatch_update"
+    patch_num: 6880880
+    file_name: p6880880_122010_Linux-x86-64.zip
+    description: Opatch utility last_updated 18-JAN-2018
+    url: https://updates.oracle.com/download/6880880.html
+    bytes: 95262503
+    checksum: 3569976014
+    sha256: 5bd98a31c8e134dff1de833ffa0834d62c606036a1626af6ed529854d215707f
+
+oracle_psu:
+  - name: "oracle_database_update"
+    patch_num: 27105253
+    file_name: p27105253_122010_Linux-x86-64.zip
+    description: Database Jan 2018 Update 12.2.0.1.180116
+    url: http://www.oracle.com/technetwork/security-advisory/cpujan2018-3236628.html
+    bytes: 115536245
+    checksum: 2459635570
+    sha256: ffc7eb6625b3d515d7713f605e8014663d0cebc3a6aa06fd48d0ad42aec1962c
+
+#  - name: "oracle_gi_update"
+#    file_name: p27100009_122010_Linux-x86-64.zip
+#    description: GI Jan 2018 Update 12.2.0.1.180116
+#    url: http://www.oracle.com/technetwork/security-advisory/cpujan2018-3236628.html
+#    checksum: 2799169380
+#    sha256: 593285ab46f492d222c631e17b08ba1a650b7f910cabf9a44438a52de38da90c
+
+oracle_ojvm:
+  - name: "ojvm_update"
+    patch_num: 27001739
+    file_name: p27001739_122010_Linux-x86-64.zip
+    description: OJVM Update 12.2.0.1.180116
+    url: http://www.oracle.com/technetwork/security-advisory/cpujan2018-3236628.html
+    bytes: 112839552
+    checksum: 2877001170
+    sha256: cd03d427abd82d0d629464e7b2835c5ac4259bf424f7a3d7f3e0eafd5be8d3f2
+
 # Remove unneeded features from the Oracle binary
-chopt_disable:
-  # Oracle Advanced Analytics
-  oaa: false
-  # Oracle OLAP
-  olap: false
-  # Oracle Partitioning
-  partitioning: false
-  # Oracle Real Application Testing
-  rat: false
+chopt_disable: false
+
+# Items that can be disabled in Oracle 12c are
+# oaa - Oracle Advanced Analytics
+# olap - Oracle OLAP
+# partitioning - Oracle Partitioning
+# rat - Oracle Real Application Testing
+chopt_disable_items:
+  - { name: oaa, description: "Oracle Advanced Analytics" }
+  - { name: olap, description: "Oracle OLAP" }
+  - { name: partitioning, description: "Oracle Partitioning" }
+  - { name: rat, description: "Oracle Real Application Testing" }
 
 ...
