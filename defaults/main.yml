@@ -20,63 +20,73 @@ oracle_directories:
 oracle_software:
   - name: "oracle_database"
     file_name: linuxx64_12201_database.zip
+    file_url: "{{ binaries_url }}/oracle/db/122/{{ file_name }}"
     description: Oracle 12.2 database installation software
-    url: http://www.oracle.com/technetwork/database/enterprise-edition/downloads/oracle12c-linux-12201-3608234.html
+    reference_url: http://www.oracle.com/technetwork/database/enterprise-edition/downloads/oracle12c-linux-12201-3608234.html
     unzip_dest: /u01/software
     creates: /u01/software/database
     bytes: 3453696911
     checksum: 4170261901
     sha256: 96ed97d21f15c1ac0cce3749da6c3dac7059bb60672d76b008103fc754d22dde
 
+# Opatch changes nearly every PSU but the filename remains the same
+# this is the reason this file is in the same directory as the PSU
 opatch_software:
   - name: "opatch_update"
     patch_num: 6880880
     file_name: p6880880_122010_Linux-x86-64.zip
-    description: Opatch utility last_updated 18-JAN-2018
-    url: https://updates.oracle.com/download/6880880.html
-    bytes: 95262503
-    checksum: 3569976014
-    sha256: 5bd98a31c8e134dff1de833ffa0834d62c606036a1626af6ed529854d215707f
+    file_url: "{{ binaries_url }}/oracle/db/122/psu/2018/apr/{{ file_name }}"
+    description: OPatch patch of version 12.2.0.1.13 for Oracle software releases DB 12.2.0.x and DB 18.x (APR 2018)
+    release: OPatch 12.2.0.1.0
+    platform: Linux x86-64
+    reference_url: https://updates.oracle.com/download/6880880.html
+    bytes: 97422646
+    checksum: 304738104
+    sha256: 92b62f9b3485315b857efc8b85fc8c7922934bb923fbd03a317acbdaa34f8145
 
 oracle_psu:
   - name: "oracle_database_update"
-    patch_num: 27105253
-    file_name: p27105253_122010_Linux-x86-64.zip
-    description: Database Jan 2018 Update 12.2.0.1.180116
-    url: http://www.oracle.com/technetwork/security-advisory/cpujan2018-3236628.html
-    bytes: 115536245
-    checksum: 2459635570
-    sha256: ffc7eb6625b3d515d7713f605e8014663d0cebc3a6aa06fd48d0ad42aec1962c
+    patch_num: 27674384
+    file_name: p27674384_122010_Linux-x86-64.zip
+    file_url: "{{ binaries_url }}/oracle/db/psu/2018/apr/{{ file_name }}"
+    description: DATABASE APR 2018 RELEASE UPDATE 12.2.0.1.180417
+    reference_url: http://www.oracle.com/technetwork/security-advisory/cpuapr2018-3678067.html
+    bytes: 207525705
+    checksum: 936726437
+    sha256: 2e1ca66cba49d8f60f7c30680569159f7e354a041fad9f5ae7772309bc379dee
 
 #  - name: "oracle_gi_update"
 #    file_name: p27100009_122010_Linux-x86-64.zip
 #    description: GI Jan 2018 Update 12.2.0.1.180116
-#    url: http://www.oracle.com/technetwork/security-advisory/cpujan2018-3236628.html
+#    url: http://www.oracle.com/technetwork/security-advisory/cpuapr2018-3678067.html
 #    checksum: 2799169380
 #    sha256: 593285ab46f492d222c631e17b08ba1a650b7f910cabf9a44438a52de38da90c
 
 oracle_ojvm:
   - name: "ojvm_update"
-    patch_num: 27001739
-    file_name: p27001739_122010_Linux-x86-64.zip
-    description: OJVM Update 12.2.0.1.180116
-    url: http://www.oracle.com/technetwork/security-advisory/cpujan2018-3236628.html
-    bytes: 112839552
-    checksum: 2877001170
-    sha256: cd03d427abd82d0d629464e7b2835c5ac4259bf424f7a3d7f3e0eafd5be8d3f2
+    patch_num: 27475613
+    file_name: p27475613_122010_Linux-x86-64.zip
+    file_url: "{{ binaries_url }}/oracle/db/psu/2018/apr/{{ file_name }}"
+    description: OJVM RELEASE UPDATE 12.2.0.1.180417
+    reference_url: http://www.oracle.com/technetwork/security-advisory/cpuapr2018-3678067.html
+    bytes: 112870685
+    checksum: 1728510146
+    sha256: 2cfc382b488e13756b6a7fbfe0067fdb811664fbf9ec5fe7b72bb18629b2a6b4
 
 # Remove unneeded features from the Oracle binary
-chopt_disable: false
-
 # Items that can be disabled in Oracle 12c are
 # oaa - Oracle Advanced Analytics
 # olap - Oracle OLAP
 # partitioning - Oracle Partitioning
 # rat - Oracle Real Application Testing
-chopt_disable_items:
-  - { name: oaa, description: "Oracle Advanced Analytics" }
-  - { name: olap, description: "Oracle OLAP" }
-  - { name: partitioning, description: "Oracle Partitioning" }
-  - { name: rat, description: "Oracle Real Application Testing" }
+disable_oaa: false
+disable_olap: false
+disable_partitioning: false
+disable_rat: false
+chopt_disable:
+  - { name: oaa, description: "Oracle Advanced Analytics", disable: "{{ disable_oaa }}" }
+  - { name: olap, description: "Oracle OLAP", disable: "{{ disable_olap }}" }
+  - { name: partitioning, description: "Oracle Partitioning", disable: "{{ disable_partitioning }}" }
+  - { name: rat, description: "Oracle Real Application Testing", disable: "{{ disable_rat }}" }
 
 ...

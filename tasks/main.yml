@@ -59,4 +59,4 @@
 # Remove unneeded features from the Oracle binary
 - name: chopt disable unneeded features
   include_tasks: chopt_disable.yml
-  when: chopt_disable
+  when: disable_oaa or disable_olap or disable_partitioning or disable_rat

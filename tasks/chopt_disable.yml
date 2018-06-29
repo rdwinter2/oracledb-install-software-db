@@ -16,8 +16,8 @@
     chdir: "{{ oracle_home }}/bin"
     creates: "{{ oracle_home }}/{{ item.name }}_disabled"
   become_user: "{{ oracle_user }}"
-  with_items: "{{ chopt_disable_items }}"
-  when: chopt_disable
+  with_items: "{{ chopt_disable }}"
+  when: "{{ item.disable }}"
 
 # Restart the database if its was running
 # srvctl start database -d myDb
