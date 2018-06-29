@@ -1,0 +1,115 @@
+---
+
+- name: Stage OPatch update to /u01/software
+  get_url:
+    url: "{{ item.file_url }}"
+    dest: "/u01/software"
+    owner: "{{ oracle_user }}"
+    group: "{{ oracle_inventory_group }}"
+    mode: "u=rw,g=r,o="
+    tmp_dest: "{{ tmp_dest }}"
+    checksum: sha256:{{ item.sha256 }}
+  with_items: "{{ opatch_software }}"
+
+# unarchive expands files under ~/.ansible/tmp first
+- name: Unzip the OPatch software
+  shell: unzip -o /u01/software/{{ item.file_name }} -d {{ oracle_home }}/
+  become_user: "{{ oracle_user }}"
+  register: unzip
+  failed_when: unzip.rc != 0
+  with_items: "{{ opatch_software }}"
+
+- name: Delete the oracle_software zip file
+  file:
+    name: "/u01/software/{{ item.file_name }}"
+    state: absent
+  with_items: "{{ opatch_software }}"
+
+# PSU
+- name: Stage PSU to /u01/software
+  get_url:
+    url: "{{ item.file_url }}"
+    dest: "/u01/software"
+    owner: "{{ oracle_user }}"
+    group: "{{ oracle_inventory_group }}"
+    mode: "u=rw,g=r,o=r"
+    tmp_dest: "{{ tmp_dest }}"
+    checksum: sha256:{{ item.sha256 }}
+  with_items: "{{ oracle_psu }}"
+
+- name: Unzip the PSU software
+  shell: unzip -o /u01/software/{{ item.file_name }} -d /u01/software
+  become_user: "{{ oracle_user }}"
+  register: unzip
+  failed_when: unzip.rc != 0
+  with_items: "{{ oracle_psu }}"
+
+# http://www.acehints.com/2016/09/fix-opatch-missing-command-fuser.html
+- name: Fix OPatch missing command fuser issue
+  file:
+    path: "{{ oracle_home }}/bin/fuser"
+    state: touch
+    owner: "{{ oracle_user }}"
+    group: "{{ oracle_inventory_group }}"
+    mode: "u=rwx,g=rx,o=rx"
+
+- name: OPatch apply PSU
+  shell: ". /home/{{ oracle_user }}/.bashrc && {{ oracle_home }}/OPatch/opatch apply -silent"
+  become_user: "{{ oracle_user }}"
+  args:
+    chdir: /u01/software/{{ item.patch_num }}
+#    creates: "{{ oracle_home }}/root.sh"
+  with_items: "{{ oracle_psu }}"
+  register: opatch_psu_apply
+
+- name: Delete the oracle_psu zip file
+  file:
+    name: "/u01/software/{{ item.file_name }}"
+    state: absent
+  with_items: "{{ oracle_psu }}"
+
+- name: Remove temporary Oracle PSU directory
+  file:
+    path: /u01/software/{{ item.patch_num }}
+    state: absent
+  with_items: "{{ oracle_psu }}"
+
+# OJVM
+- name: Stage OJVM to /u01/software
+  get_url:
+    url: "{{ item.file_url }}"
+    dest: "/u01/software"
+    owner: "{{ oracle_user }}"
+    group: "{{ oracle_inventory_group }}"
+    mode: "u=rw,g=r,o=r"
+    tmp_dest: "{{ tmp_dest }}"
+    checksum: sha256:{{ item.sha256 }}
+  with_items: "{{ oracle_ojvm }}"
+
+- name: Unzip the OJVM software
+  shell: unzip -o /u01/software/{{ item.file_name }} -d /u01/software
+  become_user: "{{ oracle_user }}"
+  register: unzip
+  failed_when: unzip.rc != 0
+  with_items: "{{ oracle_ojvm }}"
+
+- name: OPatch apply OJVM
+  shell: ". /home/{{ oracle_user }}/.bashrc && {{ oracle_home }}/OPatch/opatch apply -silent"
+  become_user: "{{ oracle_user }}"
+  args:
+    chdir: /u01/software/{{ item.patch_num }}
+#    creates: "{{ oracle_home }}/root.sh"
+  with_items: "{{ oracle_ojvm }}"
+  register: opatch_ojvm_apply
+
+- name: Delete the OJVM zip file
+  file:
+    name: "/u01/software/{{ item.file_name }}"
+    state: absent
+  with_items: "{{ oracle_ojvm }}"
+
+- name: Remove temporary Oracle OJVM directory
+  file:
+    path: /u01/software/{{ item.patch_num }}
+    state: absent
+  with_items: "{{ oracle_ojvm }}"

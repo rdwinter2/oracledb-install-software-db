@@ -1,0 +1,27 @@
+---
+
+# Check to see if database is created
+# Stop the database
+
+# cd $ORACLE_HOME/bin
+# srvctl stop database -d myDb
+
+# Remove unneeded features from the Oracle binary
+- name: "chopt disable {{ item.description }}"
+  shell: >
+    . /home/oracle/.bashrc
+    && ./chopt disable {{ item.name }}
+    && touch {{ oracle_home }}/{{ item.name }}_disabled
+  args:
+    chdir: "{{ oracle_home }}/bin"
+    creates: "{{ oracle_home }}/{{ item.name }}_disabled"
+  become_user: "{{ oracle_user }}"
+  with_items: "{{ chopt_disable }}"
+  when: "{{ item.disable }}"
+
+# Restart the database if its was running
+# srvctl start database -d myDb
+
+# run
+# select * from v$option;
+# to verify

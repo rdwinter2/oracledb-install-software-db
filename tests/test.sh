@@ -1,4 +1,4 @@
-#!/usr/bin/env bas
+#!/usr/bin/env bash
 cd /opt/ansible
 . /opt/ansible/hacking/env-setup -q
 cd $OLDPWD

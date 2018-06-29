@@ -1,2 +1,92 @@
 ---
-# defaults file for role_template
+
+# Where to get the Oracle COTS install files
+binaries_url: http://binaries
+
+oracle_user: oracle
+oracle_inventory_group: oinstall
+oracle_version: 12.2.0
+oracle_base: /u01/app/oracle
+oracle_home: "{{ oracle_base }}/product/{{ oracle_version }}/dbhome_1"
+oracle_inventory_location: /u01/app/oraInventory
+apply_psu: true
+tmp_dest: /u01/tmp
+
+oracle_directories:
+  - { dir: "/u01", owner: "{{ oracle_user }}", group: "{{ oracle_inventory_group }}", mode: "u=rwx,g=rwx,o=" }
+  - { dir: "/u01/tmp", owner: "{{ oracle_user }}", group: "{{ oracle_inventory_group }}", mode: "u=rwx,g=rwx,o=" }
+  - { dir: "/u01/software", owner: "{{ oracle_user }}", group: "{{ oracle_inventory_group }}", mode: "u=rwx,g=rwx,o=" }
+
+oracle_software:
+  - name: "oracle_database"
+    file_name: linuxx64_12201_database.zip
+    file_url: "{{ binaries_url }}/oracle/db/122/{{ file_name }}"
+    description: Oracle 12.2 database installation software
+    reference_url: http://www.oracle.com/technetwork/database/enterprise-edition/downloads/oracle12c-linux-12201-3608234.html
+    unzip_dest: /u01/software
+    creates: /u01/software/database
+    bytes: 3453696911
+    checksum: 4170261901
+    sha256: 96ed97d21f15c1ac0cce3749da6c3dac7059bb60672d76b008103fc754d22dde
+
+# Opatch changes nearly every PSU but the filename remains the same
+# this is the reason this file is in the same directory as the PSU
+opatch_software:
+  - name: "opatch_update"
+    patch_num: 6880880
+    file_name: p6880880_122010_Linux-x86-64.zip
+    file_url: "{{ binaries_url }}/oracle/db/122/psu/2018/apr/{{ file_name }}"
+    description: OPatch patch of version 12.2.0.1.13 for Oracle software releases DB 12.2.0.x and DB 18.x (APR 2018)
+    release: OPatch 12.2.0.1.0
+    platform: Linux x86-64
+    reference_url: https://updates.oracle.com/download/6880880.html
+    bytes: 97422646
+    checksum: 304738104
+    sha256: 92b62f9b3485315b857efc8b85fc8c7922934bb923fbd03a317acbdaa34f8145
+
+oracle_psu:
+  - name: "oracle_database_update"
+    patch_num: 27674384
+    file_name: p27674384_122010_Linux-x86-64.zip
+    file_url: "{{ binaries_url }}/oracle/db/psu/2018/apr/{{ file_name }}"
+    description: DATABASE APR 2018 RELEASE UPDATE 12.2.0.1.180417
+    reference_url: http://www.oracle.com/technetwork/security-advisory/cpuapr2018-3678067.html
+    bytes: 207525705
+    checksum: 936726437
+    sha256: 2e1ca66cba49d8f60f7c30680569159f7e354a041fad9f5ae7772309bc379dee
+
+#  - name: "oracle_gi_update"
+#    file_name: p27100009_122010_Linux-x86-64.zip
+#    description: GI Jan 2018 Update 12.2.0.1.180116
+#    url: http://www.oracle.com/technetwork/security-advisory/cpuapr2018-3678067.html
+#    checksum: 2799169380
+#    sha256: 593285ab46f492d222c631e17b08ba1a650b7f910cabf9a44438a52de38da90c
+
+oracle_ojvm:
+  - name: "ojvm_update"
+    patch_num: 27475613
+    file_name: p27475613_122010_Linux-x86-64.zip
+    file_url: "{{ binaries_url }}/oracle/db/psu/2018/apr/{{ file_name }}"
+    description: OJVM RELEASE UPDATE 12.2.0.1.180417
+    reference_url: http://www.oracle.com/technetwork/security-advisory/cpuapr2018-3678067.html
+    bytes: 112870685
+    checksum: 1728510146
+    sha256: 2cfc382b488e13756b6a7fbfe0067fdb811664fbf9ec5fe7b72bb18629b2a6b4
+
+# Remove unneeded features from the Oracle binary
+# Items that can be disabled in Oracle 12c are
+# oaa - Oracle Advanced Analytics
+# olap - Oracle OLAP
+# partitioning - Oracle Partitioning
+# rat - Oracle Real Application Testing
+disable_oaa: false
+disable_olap: false
+disable_partitioning: false
+disable_rat: false
+chopt_disable:
+  - { name: oaa, description: "Oracle Advanced Analytics", disable: "{{ disable_oaa }}" }
+  - { name: olap, description: "Oracle OLAP", disable: "{{ disable_olap }}" }
+  - { name: partitioning, description: "Oracle Partitioning", disable: "{{ disable_partitioning }}" }
+  - { name: rat, description: "Oracle Real Application Testing", disable: "{{ disable_rat }}" }
+
+...

@@ -1,0 +1,97 @@
+---
+
+#- name: Stage Oracle software to /u01/software
+#  get_url:
+#    url: "{{ binaries_url}}/{{ item.file_name }}"
+#    dest: "/u01/software"
+#    owner: "{{ oracle_user }}"
+#    group: "{{ oracle_inventory_group }}"
+#    mode: "u=rw,g=r,o=r"
+#    checksum: sha256:{{ item.sha256 }}
+#  with_items: "{{ oracle_software }}"
+#
+#- name: Unzip the Oracle software
+#  unarchive:
+#    src: "/u01/software/{{ item.file_name }}"
+#    dest: "{{ item.unzip_dest }}"
+#    creates: "{{ item.creates }}"
+#    owner: "{{ oracle_user }}"
+#    group: "{{ oracle_inventory_group }}"
+#    remote_src: True
+#  with_items: "{{ oracle_software }}"
+
+- name: Stage Oracle software to /u01/software
+  get_url:
+    url: "{{ item.file_url }}"
+    dest: "/u01/software"
+    owner: "{{ oracle_user }}"
+    group: "{{ oracle_inventory_group }}"
+    mode: "u=rw,g=r,o="
+    tmp_dest: "{{ tmp_dest }}"
+    checksum: sha256:{{ item.sha256 }}
+  with_items: "{{ oracle_software }}"
+
+- name: Check if Oracle software is already unzipped
+  stat:
+    path: /u01/software/database
+  register: oracle_software_unzipped
+
+# unarchive expands files under ~/.ansible/tmp first
+- name: Unzip the Oracle software
+  shell: unzip -o /u01/software/{{ item.file_name }} -d /u01/software
+  register: unzip
+  failed_when: unzip.rc != 0
+  with_items: "{{ oracle_software }}"
+  when: oracle_software_unzipped.stat.exists == false
+
+#  unarchive:
+#    src: "/u01/software/{{ item.file_name }}"
+#    dest: "{{ item.unzip_dest }}"
+#    creates: "{{ item.creates }}"
+#    owner: "{{ oracle_user }}"
+#    group: "{{ oracle_inventory_group }}"
+#    remote_src:
+#  with_items: "{{ oracle_software }}"
+
+- name: Response file for silent INSTALL_DB_SWONLY install
+  template:
+    src: swonly.rsp.j2
+    dest: ~/swonly.rsp
+    owner: "{{ oracle_user }}"
+    mode: 0600
+  become_user: "{{ oracle_user }}"
+
+- name: Install the datbase software in silent INSTALL_DB_SWONLY mode
+  shell: ". /home/oracle/.bashrc && ./runInstaller -waitforcompletion -ignoreSysPrereqs -showProgress -silent -responseFile ~/swonly.rsp"
+  args:
+    chdir: /u01/software/database
+    creates: "{{ oracle_home }}/root.sh"
+  run_once: true
+  become_user: "{{ oracle_user }}"
+  register: run_installer
+  failed_when: "'The installation of Oracle Database 12c was successful.' not in run_installer.stdout"
+
+- name: run the root scripts
+  command: "{{ item }}"
+  become: true
+  with_items:
+    - "{{ oracle_inventory_location }}/orainstRoot.sh"
+    - "{{ oracle_home }}/root.sh"
+
+- name: Delete the oracle_software zip file
+  file:
+    name: "/u01/software/{{ item.file_name }}"
+    state: absent
+  with_items: "{{ oracle_software }}"
+
+- name: Remove temporary install directory
+  file:
+    path: "/u01/software/database"
+    state: absent
+
+- name: Patch the Oracle DB software only install
+  include_tasks: apply_psu.yml
+  when: apply_psu
+
+# Patch the software with the latest PSU
+# check patch level first
