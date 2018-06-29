@@ -1,7 +1,9 @@
-oracledb-install-software-db
+Oracle database 12c COTS software installation
 =============
 
 ## Description
+
+This Ansible role installs the Oracle database 12c COTS software. It does not create any databases.
 
 ## Documentation
 
@@ -58,4 +60,5 @@ MIT
 
 ## References
 
-*
+* [oravirt/ansible-oracle](https://github.com/oravirt/ansible-oracle)
+* [Simple Steps To Perform Opatch Maintenance With Ansible](https://blog.pythian.com/opatch-maintenance-with-ansible/)

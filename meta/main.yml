@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   author: Robert D. Winter, 2nd
-  description: A role to ...
+  description: A role to install Oracle 12c database software.
   company: AFLCMC/HBCC
   issue_tracker_url:
   license: MIT

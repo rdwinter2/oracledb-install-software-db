@@ -1,2 +1,14 @@
 ---
-# defaults file for role_template
+
+# Remove unneeded features from the Oracle binary
+chopt_disable:
+  # Oracle Advanced Analytics
+  oaa: false
+  # Oracle OLAP
+  olap: false
+  # Oracle Partitioning
+  partitioning: false
+  # Oracle Real Application Testing
+  rat: false
+
+...

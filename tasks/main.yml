@@ -1,2 +1,6 @@
 ---
 # tasks file for role_template
+
+
+# Disable the options by removing it from the kernel
+# chopt disable dm
