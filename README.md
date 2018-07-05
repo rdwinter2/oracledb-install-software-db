@@ -30,6 +30,12 @@ None
   hosts: all
   become: true
   become_method: 'sudo'
+  vars:
+    binaries_url: http://nexus:8081/
+    disable_oaa: true
+    disable_olap: true
+    disable_partitioning: true
+    disable_rat: true
   roles:
     - { role: oracledb-install-software-db }
 ```
