@@ -17,11 +17,19 @@ None
 
 ## Testing
 
-## Role Variables
+## Noteworthy Role Variables
 
 | Name | Default Value | Description |
 |------|---------------|-------------|
-|
+| apply_psu | none | The quartery PSU to apply |
+
+* NOTE: Legal values for apply_psu correspond to the MON YYYY files under the vars directory, excluding filename extension.
+  * exempli gratia
+    * APR 2018
+    * JUL 2018
+    * OCT 2018
+    * JAN 2019
+    * ...
 
 ## Example Playbook
 
@@ -32,6 +40,7 @@ None
   become_method: 'sudo'
   vars:
     binaries_url: http://nexus:8081/
+    apply_psu: APR 2018
     disable_oaa: true
     disable_olap: true
     disable_partitioning: true

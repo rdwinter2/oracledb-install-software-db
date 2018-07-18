@@ -89,9 +89,5 @@
     path: "/u01/software/database"
     state: absent
 
-- name: Patch the Oracle DB software only install
-  include_tasks: apply_psu.yml
-  when: apply_psu
-
 # Patch the software with the latest PSU
 # check patch level first

@@ -1,0 +1,39 @@
+---
+
+# Opatch changes nearly every CPU but the filename remains the same
+# this is the reason this file is in the same directory as the CPU
+opatch_software:
+  - name: "opatch_update"
+    patch_num: 6880880
+    file_name: p6880880_122010_Linux-x86-64.zip
+    file_url: "{{ binaries_url }}/oracle/db/122/patch/2018/jul/{{ file_name }}"
+    description: OPatch 12.2.0.1.14 for DB 12.x and 18.x releases (JUL 2018)
+    release: OPatch 12.2.0.1.0
+    platform: Linux x86-64
+    last_updated: 11-JUL-2018
+    reference_url: https://updates.oracle.com/download/6880880.html
+    bytes: 99183505
+    checksum: 304738104
+    sha256: 92b62f9b3485315b857efc8b85fc8c7922934bb923fbd03a317acbdaa34f8145
+
+oracle_psu:
+  - name: "oracle_database_update"
+    patch_num: 28163133
+    file_name: p28163133_122010_Linux-x86-64.zip
+    file_url: "{{ binaries_url }}/oracle/db/122/patch/2018/jul/{{ file_name }}"
+    description: DATABASE JUL 2018 RELEASE UPDATE 12.2.0.1.180717
+    reference_url: http://www.oracle.com/technetwork/security-advisory/cpujul2018-4258247.html
+    bytes: 271289497
+    checksum: 551213550
+    sha256: 529f5d9fd7112640e1b41f0de70ccdef83865adc86d2cb60190ca90330f9074e
+
+oracle_ojvm:
+  - name: "ojvm_update"
+    patch_num: 27923353
+    file_name: p27923353_122010_Linux-x86-64.zip
+    file_url: "{{ binaries_url }}/oracle/db/122/patch/2018/jul/{{ file_name }}"
+    description: OJVM RELEASE UPDATE 12.2.0.1.180717
+    reference_url: http://www.oracle.com/technetwork/security-advisory/cpujul2018-4258247.html
+    bytes: 114273842
+    checksum: 1136219580
+    sha256: 66557bbe053d100ffb540c9d02d8e80e23d51dfbc94e77d2e99a984259f18937

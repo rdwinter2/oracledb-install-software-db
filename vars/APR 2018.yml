@@ -1,0 +1,45 @@
+---
+
+# Opatch changes nearly every CPU but the filename remains the same
+# this is the reason this file is in the same directory as the CPU
+opatch_software:
+  - name: "opatch_update"
+    patch_num: 6880880
+    file_name: p6880880_122010_Linux-x86-64.zip
+    file_url: "{{ binaries_url }}/oracle/db/122/patch/2018/apr/{{ file_name }}"
+    description: OPatch patch of version 12.2.0.1.13 for Oracle software releases DB 12.2.0.x and DB 18.x (APR 2018)
+    release: OPatch 12.2.0.1.0
+    platform: Linux x86-64
+    reference_url: https://updates.oracle.com/download/6880880.html
+    bytes: 97422646
+    checksum: 304738104
+    sha256: 92b62f9b3485315b857efc8b85fc8c7922934bb923fbd03a317acbdaa34f8145
+
+oracle_patch:
+  - name: "oracle_database_update"
+    patch_num: 27674384
+    file_name: p27674384_122010_Linux-x86-64.zip
+    file_url: "{{ binaries_url }}/oracle/db/122/patch/2018/apr/{{ file_name }}"
+    description: DATABASE APR 2018 RELEASE UPDATE 12.2.0.1.180417
+    reference_url: http://www.oracle.com/technetwork/security-advisory/cpuapr2018-3678067.html
+    bytes: 207525705
+    checksum: 936726437
+    sha256: 2e1ca66cba49d8f60f7c30680569159f7e354a041fad9f5ae7772309bc379dee
+
+#  - name: "oracle_gi_update"
+#    file_name: p27100009_122010_Linux-x86-64.zip
+#    description: GI Jan 2018 Update 12.2.0.1.180116
+#    url: http://www.oracle.com/technetwork/security-advisory/cpuapr2018-3678067.html
+#    checksum: 2799169380
+#    sha256: 593285ab46f492d222c631e17b08ba1a650b7f910cabf9a44438a52de38da90c
+
+oracle_ojvm:
+  - name: "ojvm_update"
+    patch_num: 27475613
+    file_name: p27475613_122010_Linux-x86-64.zip
+    file_url: "{{ binaries_url }}/oracle/db/122/patch/2018/apr/{{ file_name }}"
+    description: OJVM RELEASE UPDATE 12.2.0.1.180417
+    reference_url: http://www.oracle.com/technetwork/security-advisory/cpuapr2018-3678067.html
+    bytes: 112870685
+    checksum: 1728510146
+    sha256: 2cfc382b488e13756b6a7fbfe0067fdb811664fbf9ec5fe7b72bb18629b2a6b4

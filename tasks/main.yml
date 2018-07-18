@@ -53,6 +53,10 @@
   include_tasks: install_swonly.yml
   when: install_oracle_swonly
 
+- name: Apply Critical Patch Updates to the Oracle DB software only install
+  include_tasks: apply_cpu.yml
+  when: apply_cpu is defined and apply_cpu != ''
+
 # Patch the software with the latest PSU
 # check patch level first
 

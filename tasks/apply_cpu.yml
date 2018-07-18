@@ -1,5 +1,9 @@
 ---
 
+- name: "Load Critical Patch Update variables for {{ apply_cpu }}"
+  include_vars:
+      file: "{{ apply_cpu }}.yml"
+
 - name: Stage OPatch update to /u01/software
   get_url:
     url: "{{ item.file_url }}"
