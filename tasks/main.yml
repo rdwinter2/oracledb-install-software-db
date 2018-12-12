@@ -60,6 +60,10 @@
 # Patch the software with the latest PSU
 # check patch level first
 
+- name: Enable Oracle Unified Auditing
+  include_tasks: unified_auditing.yml
+  when: enable_unified_auditing
+
 # Remove unneeded features from the Oracle binary
 - name: chopt disable unneeded features
   include_tasks: chopt_disable.yml

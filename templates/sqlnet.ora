@@ -1,0 +1,151 @@
+# sqlnet.ora
+
+########################################
+# Group ID (Vulid):  V-61543
+# Group Title:  SRG-APP-000176-DB-000068
+# Rule ID:  SV-76033r3_rule
+# Severity: CAT I
+# Rule Version (STIG-ID):  O121-C1-015400
+# Rule Title: The DBMS, when using PKI-based authentication, must enforce authorized access to the corresponding private key.
+
+WALLET_LOCATION = (SOURCE=
+(METHOD = FILE)
+(METHOD_DATA =
+DIRECTORY=/wallet)
+
+SSL_CIPHER_SUITES=(SSL_cipher_suiteExample)
+SSL_VERSION = 1.2 or 1.1
+SSL_CLIENT_AUTHENTICATION=TRUE
+########################################
+
+
+ENCRYPTION_WALLET_LOCATION =
+  (SOURCE =
+    (METHOD = FILE)
+    (METHOD_DATA =
+      (DIRECTORY = /etc/ORACLE/WALLETS/$ORACLE_UNQNAME/)
+    )
+  )
+
+TRACE_LEVEL_CLIENT = OFF
+SQLNET.AUTHENTICATION_SERVICES = (NONE)
+NAMES.DIRECTORY_PATH = (TNSNAMES, ONAMES, HOSTNAME)
+# NAMES.DEFAULT_DOMAIN = xxx.com
+
+AUTOMATIC_IPC = OFF
+
+########################################
+# Group ID (Vulid):  V-61535
+# Group Title:  SRG-APP-000516-DB-999900
+# Rule ID:  SV-76025r2_rule
+# Severity: CAT II
+# Rule Version (STIG-ID):  O121-BP-026600
+# Rule Title: Network client connections must be restricted to supported versions.
+# Set the value to 11 or higher.
+# Valid values for SQLNET.ALLOWED_LOGON_VERSION_SERVER are: 8,9,10,11,12 and 12a
+# Valid values for SQLNET.ALLOWED_LOGON_VERSION_CLIENT are: 8,10,11,12 and 12a
+
+SQLNET.ALLOWED_LOGON_VERSION_CLIENT = 11
+SQLNET.ALLOWED_LOGON_VERSION_SERVER = 11
+########################################
+
+########################################
+# Group ID (Vulid):  V-61545
+# Group Title:  SRG-APP-000264-DB-000136
+# Rule ID:  SV-76035r5_rule
+# Severity: CAT I
+# Rule Version (STIG-ID):  O121-C1-019700
+# Rule Title: The DBMS must employ cryptographic mechanisms preventing the unauthorized disclosure of information during transmission unless the transmitted data is otherwise protected by alternative physical measures.
+
+# Group ID (Vulid):  V-61713
+# Group Title:  SRG-APP-000156-DB-000111
+# Rule ID:  SV-76203r4_rule
+# Severity: CAT II
+# Rule Version (STIG-ID):  O121-C2-013600
+# Rule Title: The DBMS must use organization-defined replay-resistant authentication mechanisms for network access to privileged accounts.
+
+#Group ID (Vulid):  V-61715
+#Group Title:  SRG-APP-000157-DB-000112
+#Rule ID:  SV-76205r4_rule
+#Severity: CAT II
+#Rule Version (STIG-ID):  O121-C2-013700
+#Rule Title: The DBMS must use organization-defined replay-resistant authentication mechanisms for network access to non-privileged accounts.
+
+SQLNET.CRYPTO_CHECKSUM_TYPES_SERVER= (SHA384)
+SQLNET.ENCRYPTION_TYPES_SERVER= (AES256)
+SQLNET.CRYPTO_CHECKSUM_SERVER = required
+
+SQLNET.CRYPTO_CHECKSUM_TYPES_CLIENT= (SHA384)
+SQLNET.ENCRYPTION_TYPES_CLIENT= (AES256)
+SQLNET.CRYPTO_CHECKSUM_CLIENT = requested
+########################################
+
+########################################
+# Group ID (Vulid):  V-61765
+# Group Title:  SRG-APP-000220-DB-000149
+# Rule ID:  SV-76255r2_rule
+# Severity: CAT II
+# Rule Version (STIG-ID):  O121-C2-017600
+# Rule Title: The DBMS must terminate user sessions upon user logoff or any other organization or policy-defined session termination events, such as idle time limit exceeded.
+
+SQLNET.EXPIRE_TIME=10
+########################################
+
+########################################
+# Group ID (Vulid):  V-61765
+# Group Title:  SRG-APP-000220-DB-000149
+# Rule ID:  SV-76255r2_rule
+# Severity: CAT II
+# Rule Version (STIG-ID):  O121-C2-017600
+# Rule Title: The DBMS must terminate user sessions upon user logoff or any other organization or policy-defined session termination events, such as idle time limit exceeded
+
+SQLNET.INBOUND_CONNECT_TIMEOUT = 3
+########################################
+
+########################################
+
+SQLNET.SEND_TIMEOUT =
+########################################
+
+
+########################################
+# Group ID (Vulid):  V-61515
+# Group Title:  SRG-APP-000516-DB-999900
+# Rule ID:  SV-76005r2_rule
+# Severity: CAT II
+# Rule Version (STIG-ID):  O121-BP-025600
+# Rule Title: Network access to the DBMS must be restricted to authorized personnel.
+
+# Group ID (Vulid):  V-61815
+# Group Title:  SRG-APP-000246-DB-000133
+# Rule ID:  SV-76305r4_rule
+# Severity: CAT III
+# Rule Version (STIG-ID):  O121-C3-019200
+# Rule Title: The DBMS must restrict the ability of users to launch Denial of Service (DoS) attacks against other information systems or networks.
+
+TCP.VALIDNODE_CHECKING = YES
+TCP.INVITED_NODES = (192.168.0.*, 10.10.10.10)
+TCP.EXCLUDED_NODES = (192.168.1.*)
+########################################
+
+
+########################################
+# Group ID (Vulid):  V-61845
+# Group Title:  SRG-APP-000178-DB-000083
+# Rule ID:  SV-76335r2_rule
+# Severity: CAT I
+# Rule Version (STIG-ID):  O121-N1-015602
+# Rule Title: When using command-line tools such as Oracle SQL*Plus, which can accept a plain-text password, users must use an alternative logon method that does not expose the password.
+# orapki create -wallet wallet_location -auto_login_local
+
+
+SQLNET.WALLET_OVERRIDE = TRUE
+########################################
+
+TRACE_UNIQUE_CLIENT = OFF
+USE_DEDICATED_SERVER = ON
+
+SEC_USER_AUDIT_ACTION_BANNER – this specifies a text file containing the banner that warns users
+they will be audited
+• SEC_USER_UNAUTHORIZED_ACCESS_BANNER – this specifies a text file containing the banner warns
+user about unauthorized access

@@ -1,0 +1,29 @@
+---
+
+# shutdown database and listener if running
+# sqlplus / as sysoper
+# shutdown immediate
+# exit
+# lsnrctl stop
+
+- name: Relink the Oracle binaries with uniaud_on
+  shell: >
+    . /home/oracle/.bashrc
+    && make -f ins_rdbms.mk uniaud_on ioracle
+    && touch {{ oracle_home }}/unified_auditing_enabled
+  args:
+    chdir: "{{ oracle_home }}/rdbms/lib"
+    creates: "{{ oracle_home }}/unified_auditing_enabled"
+  become_user: "{{ oracle_user }}"
+
+# handler?
+# startup database and listener if running
+# sqlplus / as sysoper
+# startup
+# exit
+# lsnrctl start
+
+# verify
+# SELECT PARAMETER, VALUE from v$option where PARAMETER = 'Unified Auditing';
+
+...

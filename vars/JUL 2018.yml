@@ -13,8 +13,8 @@ opatch_software:
     last_updated: 11-JUL-2018
     reference_url: https://updates.oracle.com/download/6880880.html
     bytes: 99183505
-    checksum: 304738104
-    sha256: 92b62f9b3485315b857efc8b85fc8c7922934bb923fbd03a317acbdaa34f8145
+    checksum: 2699241905
+    sha256: d7acaff936fc090d62b12b476790bc346fc6e2a6ab59d3f29149043ab2e0748f
 
 oracle_psu:
   - name: "oracle_database_update"
